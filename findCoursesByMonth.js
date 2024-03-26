@@ -285,7 +285,7 @@ const coursesWithVendors = [
                   "trainingTimingsSet": [
                      {
                         "id": 1,
-                        "startDate": "2023-08-31",
+                        "startDate": "2023-07-31",
                         "endDate": "2023-08-04",
                         "weekday": 1,
                         "hours": 40
@@ -588,26 +588,63 @@ const coursesWithVendors = [
    }
 }
 ]
+let trainingBatchJson;
+for (let i = 0; i < coursesWithVendors.length; i++) {
+   if (coursesWithVendors[i].courseModules && Array.isArray(coursesWithVendors[i].courseModules)) {
+      coursesWithVendors[i] = {
+         ...coursesWithVendors[i],
+         courseModules: coursesWithVendors[i].courseModules.map(JSON.stringify)
+      };
 
-const batchTypesToFilter = ['WEEKENDBATCH', 'WEEKDAYBATCH', 'PARTTIMEBATCH'];
-function filterCourseTitlesByBatchType(courses, batchTypes) {
-    return _.flatMap(courses, course => {
-        return _.flatMap(course.courseFeeCombos, combo => {
-            return _.chain(combo.trainingBatches)
-                .filter(batch => batchTypes.includes(batch.batchType))
-                .map(matchingBatch => ({
-                    courseId: course.id,
-                    courseTitle: course.title,
-                    batchType: matchingBatch.batchType,
-                    batchTitle: matchingBatch.batchTitle
-                }))
-                .value();
-        });
+   }
+   if (coursesWithVendors[i].coursePackages && Array.isArray(coursesWithVendors[i].coursePackages)) {
+      coursesWithVendors[i] = {
+         ...coursesWithVendors[i],
+         coursePackages: coursesWithVendors[i].coursePackages.map(JSON.stringify)
+      };
+   }
+   if (coursesWithVendors[i].courseFeeCombos && Array.isArray(coursesWithVendors[i].courseFeeCombos)) {
+      coursesWithVendors[i] = {
+         ...coursesWithVendors[i],
+         courseFeeCombos: coursesWithVendors[i].courseFeeCombos.map(JSON.stringify)
+      
+      };
+      const feeComboSize=coursesWithVendors[i].courseFeeCombos.length;
+      if(feeComboSize>0){
+         for(let j=0;j<feeComboSize;j++)
+         {
+           const feeComboJson= JSON.parse(coursesWithVendors[i].courseFeeCombos[j])
+           traingBatchLength=feeComboJson.trainingBatches.length;
+           if(traingBatchLength>0){
+           
+       if (feeComboJson.trainingBatches && Array.isArray(feeComboJson.trainingBatches)) {
+      feeComboJson.trainingBatches = {
+         ...feeComboJson.trainingBatches,
+      
+      };
+         trainingBatchJson=feeComboJson.trainingBatches;
+           }
+         }
+      }
+
+   }
+ 
+}
+}
+function filterCoursesWithFeeCombo(coursesWithVendors) {
+     return _.reject(coursesWithVendors, course => _.isEmpty(course.courseFeeCombos));
+}
+function filterByMonth(array, key, month) {
+    return _.filter(array, obj => {
+        const objValue = obj[key];
+        const dashIndex = objValue.indexOf('-');
+        if (dashIndex !== -1) {
+            const monthPart = objValue.substring(dashIndex + 1, dashIndex + 4);
+            return monthPart === month;
+        }
+        return false;
     });
 }
-const filteredCourses = filterCourseTitlesByBatchType(coursesWithVendors, batchTypesToFilter);
-console.log("Filtered Training Courses:");
-console.log(filteredCourses);
-
-
+console.log("training courses",filterCoursesWithFeeCombo(coursesWithVendors));
+console.log("Training Courses for Current Month:", filterByMonth(trainingBatchJson,'formattedDateString','Aug'));
 
