@@ -18,6 +18,41 @@ const _ = require('lodash');
     "coursePkgId": null,
     "actionType": "purchase",
     "currency": null,
+    "paymentStatus": "Invalid coupon",
+    "paymentCode": null,
+    "paymentMethod": null,
+    "paymentResponse":true,
+    "createdDate": "2023-10-12",
+    "updatedDate": null,
+    "stripeId": null,
+    "upstreamId": null,
+    "promoCode": null,
+    "paymentLink": null,
+    "courseAmt": 25.0,
+    "discountAmt": 25.0,
+    "marketAmt": 50.0,
+    "coupon": "HOLLIDAY50",
+    "couponAmt": null,
+    "couponId": null
+  },
+  {
+    "id": 368,
+    "firstname": null,
+    "lastname": null,
+    "mobileno": null,
+    "mailId": null,
+    "startDate": null,
+    "endDate": null,
+    "message": null,
+    "msgAttachment": null,
+    "msgAttachmentContentType": null,
+    "courseId": 3,
+    "courseFeeComboId": "offerfee5 - 106",
+    "trainingBatchId": null,
+    "courseTitle": "CompTIA Security+ - eBook",
+    "coursePkgId": null,
+    "actionType": "purchase",
+    "currency": null,
     "paymentStatus": null,
     "paymentCode": null,
     "paymentMethod": null,
@@ -282,60 +317,26 @@ const _ = require('lodash');
   }
 ]
 
-// const data = [
-//     {
-//         "purchaseId": 1,
-//         "courseName": "Course 1",
-//         "couponApplied": true,
-//         "purchaseCompleted": true,
-//         "purchaseDate": "2024-03-10"
-//     },
-//     {
-//         "purchaseId": 2,
-//         "courseName": "Course 2",
-//         "couponApplied": true,
-//         "purchaseCompleted": false,
-//         "purchaseDate": "2024-03-15"
-//     },
-//     {
-//         "purchaseId": 3,
-//         "courseName": "Course 3",
-//         "couponApplied": false,
-//         "purchaseCompleted": true,
-//         "purchaseDate": "2024-03-20"
-//     },
-//     {
-//         "purchaseId": 4,
-//         "courseName": "Course 4",
-//         "couponApplied": true,
-//         "purchaseCompleted": true,
-//         "purchaseDate": "2024-04-05"
-//     },
-// ];
-
 const couponsAppliedAndCompletedStats = () => {
     return _.sumBy(data, (item) => (item.coupon !== null && item.paymentResponse === "true") ? 1 : 0);
 };
 
 const couponsAppliedButNotCompletedStats = () => {
     return _.filter(data, (item) => (item.coupon !== null && item.paymentResponse !== "true")).length;
-
 };
 const invalidCouponsAppliedStats = () => {
-    const invalidCoupons = _.filter(data, item => item.coupon == null || item.coupon == "FLAT50");
-    //console.log("item.coupon",item.coupon );
-    return _.size(invalidCoupons);
+    const invalidCoupons = _.filter(data, item => item.paymentStatus === "Invalid coupon" ).map( elem => elem.coupon);
+    return invalidCoupons;
 };
 
 const couponsUsedThisMonth = () => {
-    const currentMonth = new Date().getMonth() + 1;
-      const couponsThisMonth =  _.filter(data, (item) => {
-        const purchaseMonth = new Date(item.createdDate).getMonth() + 1;
-        return item.coupon !== null && purchaseMonth === currentMonth;
-    });
-    return _.size(couponsThisMonth);
+  const currentMonth = new Date().getMonth() + 1;
+    const couponsThisMonth =  _.filter(data, (item) => {
+      const purchaseMonth = new Date(item.createdDate).getMonth() + 1;
+      return item.coupon !== null && purchaseMonth === currentMonth;
+  }).size();
+  return _.size(couponsThisMonth);
 };
-
 
 console.log("Coupons Applied and Purchase Completed Stats:", couponsAppliedAndCompletedStats());
 console.log("Coupons Applied but Purchase Not Completed Stats:", couponsAppliedButNotCompletedStats());

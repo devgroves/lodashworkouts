@@ -425,27 +425,27 @@ const coursesWithVendors = [{
       }
    }
 ]
-for (let i = 0; i < coursesWithVendors.length; i++) {
-   if (coursesWithVendors[i].courseModules && Array.isArray(coursesWithVendors[i].courseModules)) {
-      coursesWithVendors[i] = {
-         ...coursesWithVendors[i],
-         courseModules: coursesWithVendors[i].courseModules.map(JSON.stringify)
-      };
+// for (let i = 0; i < coursesWithVendors.length; i++) {
+//    if (coursesWithVendors[i].courseModules && Array.isArray(coursesWithVendors[i].courseModules)) {
+//       coursesWithVendors[i] = {
+//          ...coursesWithVendors[i],
+//          courseModules: coursesWithVendors[i].courseModules.map(JSON.stringify)
+//       };
 
-   }
-   if (coursesWithVendors[i].coursePackages && Array.isArray(coursesWithVendors[i].coursePackages)) {
-      coursesWithVendors[i] = {
-         ...coursesWithVendors[i],
-         coursePackages: coursesWithVendors[i].coursePackages.map(JSON.stringify)
-      };
-   }
-   if (coursesWithVendors[i].courseFeeCombos && Array.isArray(coursesWithVendors[i].courseFeeCombos)) {
-      coursesWithVendors[i] = {
-         ...coursesWithVendors[i],
-         courseFeeCombos: coursesWithVendors[i].courseFeeCombos.map(JSON.stringify)
-      };
-   }
-}
+//    }
+//    if (coursesWithVendors[i].coursePackages && Array.isArray(coursesWithVendors[i].coursePackages)) {
+//       coursesWithVendors[i] = {
+//          ...coursesWithVendors[i],
+//          coursePackages: coursesWithVendors[i].coursePackages.map(JSON.stringify)
+//       };
+//    }
+//    if (coursesWithVendors[i].courseFeeCombos && Array.isArray(coursesWithVendors[i].courseFeeCombos)) {
+//       coursesWithVendors[i] = {
+//          ...coursesWithVendors[i],
+//          courseFeeCombos: coursesWithVendors[i].courseFeeCombos.map(JSON.stringify)
+//       };
+//    }
+// }
 
 function uniqueVendors(coursesWithVendors) {
    return _.uniq(_.map(coursesWithVendors, 'vendor'));
